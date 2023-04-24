@@ -1,0 +1,79 @@
+# import libraries
+import codecademylib3
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt 
+import seaborn as sns
+from scipy.stats import ttest_ind
+from scipy.stats import f_oneway
+
+# load data
+heart = pd.read_csv('heart_disease.csv')
+
+#PrintData, first 5 rows 
+print(heart.head())
+
+#Create a boxplot of 'Thalach' and heart disease
+sns.boxplot(x = heart.heart_disease, y = heart.thalach)
+plt.show()
+
+#Save thalach of heart Disease and Non-heart Disease
+thalach_hd = heart.thalach[heart.heart_disease == 'presence']
+thalach_no_hd = heart.thalach[heart.heart_disease == 'absence']
+
+
+#Print of the meam, and median of thalach of heart Disease and hon-heart disease
+print(thalach_hd.mean(), thalach_no_hd.mean(), thalach_hd.median(), thalach_no_hd.median())
+
+#Run a two-sample t-test
+tstat, pval = ttest_ind(thalach_hd, thalach_no_hd)
+print(pval)
+
+# second box plot:
+plt.clf()
+sns.boxplot(x=heart.heart_disease, y=heart.age)
+plt.show()
+ # third box plot:
+plt.clf()
+sns.boxplot(x=heart.heart_disease, y=heart.chol)
+plt.show()
+
+#side by side 
+plt.clf()
+sns.boxplot(x = heart.cp, y = heart.thalach)
+plt.show()
+
+#Finding cooration bewtween Chest Pain and Thalach
+thalach_typical = heart.thalach[heart.cp == 'typical angina']
+thalach_asymptom = heart.thalach[heart.cp == 'asymptomatic']
+thalach_nonangin = heart.thalach[heart.cp == 'non-anginal pain']
+thalach_atypical = heart.thalach[heart.cp == 'atypical angina']
+
+#Import scipy.stats and then run a One_way, Run a ANOVA
+from scipy.stats import f_oneway
+Fstat, pval = f_oneway(thalach_typical, thalach_asymptom, thalach_nonangin, thalach_atypical)
+print(pval)
+
+#Import Turkeys Range and run a test
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+turkey_result = pairwise_tukeyhsd(heart.thalach, heart.cp , 0.05)
+print(turkey_result)
+
+#Creat a table of heart disease vs chest pain
+xtab = pd.crosstab(heart.cp, heart.heart_disease)
+print(xtab)
+
+
+#Import scipy.stats then run a chi-square test
+from scipy.stats import chi2_contingency
+chi2, pval, dof, expected = chi2_contingency(xtab)
+print(pval)
+
+#REPORT
+#I Was given the task to investigate data relating to Heart Disease, Thalach, and Chest Pain
+#types. First I loaded the data, and compair the absence and presence of Heart DIsease
+#and their thalach numbers in a boxplot. I then also compair their Age compair the absence and presence 
+#of Heart Disease, along with their cholrestal and Heart Desease. The Hosbitial 
+#Asked to compair typical angina, asymtomatic, non-anginal pain, and atypical angina chest 
+#pain types along with their thalach numbers. I then created a chart showing if heart disease
+#and their chest pain. 

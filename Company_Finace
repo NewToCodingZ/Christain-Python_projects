@@ -1,0 +1,87 @@
+#Import all libary
+import codecademylib3
+from sklearn import preprocessing
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import numpy as np
+
+# load in financial data
+financial_data = pd.read_csv('financial_data.csv')
+expense_overview = pd.read_csv('expenses.csv')
+employees = pd.read_csv('employees.csv')
+# code goes here
+month = financial_data['Month']
+revenue = financial_data['Revenue']
+expenses = financial_data['Expenses']
+
+#Plot line chart of Revenue and Month
+plt.plot(month, revenue)
+plt.xlabel('Month')
+plt.ylabel('Amount ($)')
+plt.title('Revenue')
+plt.show()
+plt.clf()
+
+#Plot line chart of Expenses and Month
+plt.plot(month, expenses)
+plt.xlabel('Month')
+plt.ylabel('Amount ($)')
+plt.title('Expensas')
+plt.show()
+plt.clf()
+
+#print a tabel of proportions of expanese at the company
+print(expense_overview.head(7))
+
+proportions = expense_overview['Proportion']
+expense_categories = expense_overview['Expense']
+#Create a part of the pie chart label as "Other" to keep it clean, 
+expense_categories = ['Salaries', 'Advertising', "Office Rent", 'Other']
+proportions = [0.62, 0.15, 0.15, 0.08]
+plt.pie(proportions, labels = expense_categories)
+plt.title("Proportions of Expense")
+plt.axis("Equal")
+plt.tight_layout()
+plt.show()
+
+#we view All Employess and rank them on how good their Prodctivity is in Order from Worst to Best
+sorted_productivity = employees.sort_values(by=['Productivity'])
+print(sorted_productivity)
+
+#We make a list of 100 worst employess that will be released 
+employees_cut = sorted_productivity.head(100)
+print(employees_cut)
+
+#THE COO wants to see if theirs a debate whether to allow employess to work from home
+#First the COO want to see the mean, and median of the times
+commute_times = employees['Commute Time']
+commute_avg = commute_times.mean()
+commute_medium = commute_times.median()
+print(commute_times, commute_avg, commute_medium, commute_times.describe)
+
+#The data is skewed so we use log to make it more 'Normal'
+commute_times_log = np.log(commute_times)
+
+plt.clf()
+
+plt.hist(commute_times_log)
+plt.xlabel("Time it takes")
+plt.ylabel('Frequency')
+plt.title('Driving to work')
+plt.show()
+
+#print the log-version of commute Times
+
+
+#REPORT
+#This Commany came to me asking to review thier cost and profits. The reason for this
+#is to make sure their Busness is going good. My methodology is compairing the
+#cost and revue made in the same months. We found that cost of running the 
+#busness greatly excited the Revue it was making. By Showing 'Salaries', 'Advertising', "Office Rent"
+# the companys greatest cost in pie chart. We found one of the greatest cost was employess.
+#I then made a chart showing the top 100 employess who are least productive and would
+#reccomend cutting them to save the Bussness. The COO (Cheif Operating Officer) wanted to see
+#to see if working from home vs the office has an impact on productivity, and to find the
+#average drive time to work and Make a Bar graph of it. My Concludion is The best way 
+#To save the company would to be cutting the 100 worst Empoyess. 
